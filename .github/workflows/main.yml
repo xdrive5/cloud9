@@ -1,0 +1,124 @@
+# 天翼云盘自动签到
+name: 天翼云盘签到
+
+on:
+  push:
+    branches: [main, master]
+  schedule:
+    - cron: '39 1,13 * * *'  # 每天 09:39 和 21:39 (北京时间)
+  workflow_dispatch:
+    inputs:
+      force_run:
+        description: '强制执行签到'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  # 签到任务
+  checkin:
+    runs-on: ubuntu-latest
+    env:
+      TZ: Asia/Shanghai
+    outputs:
+      success: ${{ steps.checkin.outputs.success }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run checkin
+        id: checkin
+        run: |
+          # 执行签到并生成页面
+          {
+            echo "# 天翼云盘签到记录"
+            echo ""
+            echo "[![签到状态](https://github.com/${{ github.repository }}/actions/workflows/main.yml/badge.svg)](https://github.com/${{ github.repository }}/actions/workflows/main.yml) [![项目主页](https://img.shields.io/badge/GitHub-项目主页-blue?logo=github)](https://github.com/${{ github.repository }})"
+            echo ""
+            echo "**最后更新:** $(date '+%Y-%m-%d %H:%M:%S %Z')"
+            echo ""
+            echo "## 快速导航"
+            echo ""
+            echo "- 🔄 [查看Action运行记录](https://github.com/${{ github.repository }}/actions)"
+            echo "- 📋 [查看最新运行](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+            echo "- 🏠 [返回项目主页](https://github.com/${{ github.repository }})"
+            echo "- ⚙️ [手动触发签到](https://github.com/${{ github.repository }}/actions/workflows/main.yml)"
+            echo ""
+            echo "## 签到详情"
+            echo ""
+            python3 ./main.py 2>&1 || echo "签到脚本执行出错"
+          } | tee index.md
+          
+          # 检查签到是否成功（检查输出中是否包含成功标识）
+          if grep -q "所有账户处理完成" index.md; then
+            echo "success=true" >> $GITHUB_OUTPUT
+          else
+            echo "success=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          TYYP_USERNAME: ${{ secrets.TYYP_USERNAME }}
+          TYYP_PSW: ${{ secrets.TYYP_PSW }}
+
+      - name: Set commit message
+        id: commit_msg
+        run: echo "message=🤖 自动签到更新 $(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_OUTPUT
+
+      - name: Commit changes
+        if: always()
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: ${{ steps.commit_msg.outputs.message }}
+          file_pattern: 'index.md'
+          commit_options: '--no-verify'
+          skip_dirty_check: true
+
+  # 部署到 GitHub Pages
+  deploy:
+    needs: checkin
+    if: always() && needs.checkin.result != 'cancelled'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Build with Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./
+          destination: ./_site
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
