@@ -249,7 +249,7 @@ class TianYiCloudBot:
         # 签到
         sign_success, sign_msg = self.sign_in()
         results['sign_in'] = sign_msg
-'''
+
         # 抽奖
         for i, draw_url in enumerate(Config.DRAW_URLS, 1):
             if i > 1:  # 第一次抽奖后等待5秒
@@ -257,7 +257,7 @@ class TianYiCloudBot:
 
             draw_success, draw_msg = self.draw_prize(i, draw_url)
             results['draws'].append(draw_msg)
-'''
+
         return results
 
 
@@ -310,7 +310,7 @@ def main():
         print(f"### 执行结果")
         print(f"- **登录状态**: {results['login']}")
         print(f"- **签到结果**: {results['sign_in']}")
-'''
+
         # 抽奖结果
         if results['draws']:
             print(f"- **抽奖结果**:")
@@ -321,7 +321,7 @@ def main():
                     print(f"  - 🎉 第{j}次: {clean_result}")
                 else:
                     print(f"  - ❌ 第{j}次: {clean_result}")
-'''
+
         print()
 
     # 记录结束时间并计算运行时间
