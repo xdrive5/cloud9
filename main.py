@@ -249,7 +249,7 @@ class TianYiCloudBot:
         # 签到
         sign_success, sign_msg = self.sign_in()
         results['sign_in'] = sign_msg
-'''
+
         # 抽奖
         for i, draw_url in enumerate(Config.DRAW_URLS, 1):
             if i > 1:  # 第一次抽奖后等待5秒
@@ -257,7 +257,7 @@ class TianYiCloudBot:
 
             draw_success, draw_msg = self.draw_prize(i, draw_url)
             results['draws'].append(draw_msg)
-'''
+
         return results
 
 
