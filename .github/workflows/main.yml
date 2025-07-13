@@ -5,7 +5,7 @@ on:
   push:
     branches: [main, master]
   schedule:
-    - cron: '39 1,13 * * *'  # 每天 09:39 和 21:39 (北京时间)
+    - cron: '39 7,19 * * *'
   workflow_dispatch:
     inputs:
       force_run:
