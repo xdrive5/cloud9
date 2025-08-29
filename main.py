@@ -24,13 +24,6 @@ class Config:
     LOGIN_SUBMIT_URL = "https://open.e.189.cn/api/logbox/oauth2/loginSubmit.do"
     SIGN_URL_TEMPLATE = "https://api.cloud.189.cn/mkt/userSign.action?rand={}&clientType=TELEANDROID&version=8.6.3&model=SM-G930K"
 
-    # 抽奖URL
-    DRAW_URLS = [
-        "https://m.cloud.189.cn/v2/drawPrizeMarketDetails.action?taskId=TASK_SIGNIN&activityId=ACT_SIGNIN",
-        "https://m.cloud.189.cn/v2/drawPrizeMarketDetails.action?taskId=TASK_SIGNIN_PHOTOS&activityId=ACT_SIGNIN",
-        "https://m.cloud.189.cn/v2/drawPrizeMarketDetails.action?taskId=TASK_2022_FLDFS_KJ&activityId=ACT_SIGNIN"
-    ]
-
     # 请求头
     LOGIN_HEADERS = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/76.0',
@@ -211,32 +204,12 @@ class TianYiCloudBot:
             print(error_msg)
             return False, error_msg
 
-    def draw_prize(self, round_num: int, url: str) -> Tuple[bool, str]:
-        """执行抽奖"""
-        try:
-            response = self.session.get(url, headers=Config.SIGN_HEADERS, timeout=10)
-            data = response.json()
-
-            if "errorCode" in data:
-                message = f"抽奖失败，次数不足"
-                return False, message
-            else:
-                prize_name = data.get("prizeName", "未知奖品")
-                message = f"抽奖成功，获得{prize_name}"
-                return True, message
-
-        except Exception as e:
-            error_msg = f"第{round_num}次抽奖出错: {e}"
-            print(error_msg)
-            return False, error_msg
-
     def run(self) -> Dict[str, str]:
         """执行完整的签到抽奖流程"""
         results = {
             'account_id': self.account_id,
             'login': '',
-            'sign_in': '',
-            'draws': []
+            'sign_in': ''
         }
 
         # 登录
@@ -249,14 +222,6 @@ class TianYiCloudBot:
         # 签到
         sign_success, sign_msg = self.sign_in()
         results['sign_in'] = sign_msg
-
-        # 抽奖
-        for i, draw_url in enumerate(Config.DRAW_URLS, 1):
-            if i > 1:  # 第一次抽奖后等待5秒
-                time.sleep(5)
-
-            draw_success, draw_msg = self.draw_prize(i, draw_url)
-            results['draws'].append(draw_msg)
 
         return results
 
@@ -310,17 +275,6 @@ def main():
         print(f"### 执行结果")
         print(f"- **登录状态**: {results['login']}")
         print(f"- **签到结果**: {results['sign_in']}")
-
-        # 抽奖结果
-        if results['draws']:
-            print(f"- **抽奖结果**:")
-            for j, draw_result in enumerate(results['draws'], 1):
-                # 提取关键信息，去除重复的"第X次"
-                clean_result = draw_result.replace(f"第{j}次", "").strip()
-                if "成功" in draw_result:
-                    print(f"  - 🎉 第{j}次: {clean_result}")
-                else:
-                    print(f"  - ❌ 第{j}次: {clean_result}")
 
         print()
 
