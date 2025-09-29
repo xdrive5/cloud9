@@ -253,8 +253,8 @@ def main():
     # 记录开始时间
     start_time = datetime.now()
 
-    print("# 天翼云盘自动签到抽奖程序")
-    print()
+    # print("# 天翼云盘自动签到抽奖程序")
+    # print()
 
     # 加载账户信息
     accounts = load_accounts()
@@ -272,7 +272,7 @@ def main():
         results = bot.run()
 
         # 输出结果摘要
-        print(f"### 执行结果")
+        # print(f"### 执行结果")
         print(f"- **登录状态**: {results['login']}")
         print(f"- **签到结果**: {results['sign_in']}")
 
