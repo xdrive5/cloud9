@@ -193,9 +193,9 @@ class TianYiCloudBot:
             is_signed = result.get('isSign', False)
 
             if is_signed:
-                message = f"已签过到👌，获得{netdisk_bonus}M空间"
+                message = f"已签过到👌，获得{netdisk_bonus}M"
             else:
-                message = f"签到成功👍，获得{netdisk_bonus}M空间"
+                message = f"签到成功👍，获得{netdisk_bonus}M"
 
             return True, message
 
