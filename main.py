@@ -253,15 +253,8 @@ def main():
     # 记录开始时间
     start_time = datetime.now()
 
-    # print("# 天翼云盘自动签到抽奖程序")
-    # print()
-
     # 加载账户信息
     accounts = load_accounts()
-    print(f"## 执行概览")
-    print(f"- **启动时间**: {start_time.strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"- **账户数量**: {len(accounts)} 个")
-    print()
 
     # 处理每个账户
     for i, (username, password) in enumerate(accounts, 1):
@@ -275,7 +268,6 @@ def main():
         # print(f"### 执行结果")
         print(f"- **登录状态**: {results['login']}")
         print(f"- **签到结果**: {results['sign_in']}")
-
         print()
 
     # 记录结束时间并计算运行时间
@@ -283,11 +275,9 @@ def main():
     duration = end_time - start_time
 
     print("---")
-    print("## 执行统计")
+    print("## ✅ 所有账户处理完成")
     print(f"- **结束时间**: {end_time.strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"- **运行时长**: {duration.total_seconds():.2f} 秒")
-    print()
-    print("✅ **所有账户处理完成！**")
 
 
 if __name__ == "__main__":
