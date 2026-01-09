@@ -85,7 +85,7 @@ class CryptoUtils:
         return result
 
 class TianYiCloudBot:
-    """天翼云盘自动签到抽奖机器人"""
+    """天翼云盘自动签到机器人"""
 
     def __init__(self, username: str, password: str, account_id: str = ""):
         self.username = username
@@ -274,8 +274,8 @@ def main():
     end_time = datetime.now()
     duration = end_time - start_time
 
-    print("---")
-    print("## ✅ 所有账户处理完成")
+    print("***")
+    print("### ✅ 所有账户处理完成")
     print(f"- **结束时间**: {end_time.strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"- **运行时长**: {duration.total_seconds():.2f} 秒")
 
