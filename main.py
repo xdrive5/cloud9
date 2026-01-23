@@ -276,7 +276,7 @@ def main():
 
     print("***")
     print("### ✅ 所有账户处理完成")
-    print(f"- **结束时间**: {end_time.strftime('%Y-%m-%d %H:%M:%S')}")
+    # print(f"- **结束时间**: {end_time.strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"- **运行时长**: {duration.total_seconds():.2f} 秒")
 
 
