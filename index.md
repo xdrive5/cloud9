@@ -2,16 +2,16 @@
 
 [![签到状态](https://github.com/xdrive5/cloud9/actions/workflows/main.yml/badge.svg)](https://github.com/xdrive5/cloud9/actions/workflows/main.yml) [![项目主页](https://img.shields.io/badge/GitHub-项目主页-blue?logo=github)](https://github.com/xdrive5/cloud9)
 
-**最后更新:** 2026-05-16 22:20:22 CST
+**最后更新:** 2026-05-17 19:57:37 CST
 
 ## 账户1
 - **登录状态**: 登录成功
-- **签到结果**: 已签过到👌，获得88M
+- **签到结果**: 签到成功👍，获得74M
 
 ## 账户2
 - **登录状态**: 登录成功
-- **签到结果**: 已签过到👌，获得52M
+- **签到结果**: 签到成功👍，获得89M
 
 ***
 ### ✅ 所有账户处理完成
-- **运行时长**: 19.44 秒
+- **运行时长**: 17.36 秒
